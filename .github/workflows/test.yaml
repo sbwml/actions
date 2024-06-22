@@ -1,0 +1,19 @@
+name: Test
+
+on:
+  workflow_dispatch:
+  schedule:
+    # weekly, randomly chosen time
+    - cron: "17 18 * * 0"
+
+jobs:
+  build:
+    name: Test
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+    - name: Build System Setup
+      uses: sbwml/actions@openwrt-build-setup
