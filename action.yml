@@ -2,6 +2,7 @@ runs:
   using: "composite"
   steps:
     - name: Install LLVM
+      shell: bash
       run: |
         export PATH="/opt/clang/bin:$PATH"
         echo "/opt/clang/bin" >> $GITHUB_PATH
