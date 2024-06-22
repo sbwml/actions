@@ -2,6 +2,7 @@ runs:
   using: "composite"
   steps:
     - name: Build System Setup
+      shell: bash
       env:
         DEBIAN_FRONTEND: noninteractive
       run: |
