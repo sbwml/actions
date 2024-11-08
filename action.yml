@@ -7,7 +7,7 @@ runs:
         export PATH="/opt/clang/bin:$PATH"
         echo "/opt/clang/bin" >> $GITHUB_PATH
         mkdir /opt/clang
-        wget -q https://github.com/sbwml/redhat-llvm-project/releases/download/18.1.8/clang-18.1.8-x86_64-redhat-linux.tar.xz
-        sudo tar --strip-components=1 -C /opt/clang -xf clang-18.1.8-x86_64-redhat-linux.tar.xz
-        rm -rf clang-18.1.8-x86_64-redhat-linux.tar.xz
+        wget -q https://github.com/sbwml/openwrt-llvm-toolchain/releases/download/19.0.1/clang-19.0.1-x86_64-unknown-linux-gnu.tar.xz
+        sudo tar --strip-components=1 -C /opt/clang -xf clang-19.0.1-x86_64-unknown-linux-gnu.tar.xz
+        rm -rf clang-19.0.1-x86_64-unknown-linux-gnu.tar.xz
         clang --version
