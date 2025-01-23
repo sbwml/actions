@@ -6,8 +6,8 @@ runs:
       run: |
         export PATH="/opt/clang/bin:$PATH"
         echo "/opt/clang/bin" >> $GITHUB_PATH
-        mkdir /opt/clang
-        wget -q https://github.com/sbwml/redhat-llvm-project/releases/download/19.1.4/clang-19.1.4-x86_64-redhat-linux.tar.xz
-        sudo tar --strip-components=1 -C /opt/clang -xf clang-19.1.4-x86_64-redhat-linux.tar.xz
-        rm -rf clang-19.1.4-x86_64-redhat-linux.tar.xz
+        sudo mkdir /opt/clang
+        wget -q ${{ secrets.clang }}
+        sudo tar --strip-components=1 -C /opt/clang -xf clang-*-x86_64-unknown-linux-gnu.tar.xz
+        rm -rf clang-*-x86_64-unknown-linux-gnu.tar.xz
         clang --version
