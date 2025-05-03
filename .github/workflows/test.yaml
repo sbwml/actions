@@ -1,0 +1,20 @@
+name: Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Test
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+    - name: Free disk space
+      uses: sbwml/actions@install-llvm-20
+
+    - name: clang version
+      run: |
+        clang --version
