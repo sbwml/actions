@@ -40,5 +40,5 @@ jobs:
   swap-size-gb:
     description: 'Swap space to create, in GB.'
     required: false
-    default: '12'
+    default: '4'
 ```

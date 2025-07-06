@@ -11,7 +11,7 @@ inputs:
   swap-size-gb:
     description: 'Swap space to create, in GB.'
     required: false
-    default: '8'
+    default: '4'
   build-mount-path:
     description: 'Absolute path to the mount point where the build space will be available, defaults to github.workspace if unset.'
     required: false
@@ -58,7 +58,7 @@ runs:
           echo "::endgroup::"
         fi
         echo "::group::  Create Volume Group"
-        mnt_size=$(df -h /mnt | tail -1 | awk '{print $4}' | sed 's/[[:alpha:]]//g' | sed 's/\..*//')
+        mnt_size=$(expr $(df -h /mnt | tail -1 | awk '{print $4}' | sed 's/[[:alpha:]]//g' | sed 's/\..*//') - ${{ inputs.swap-size-gb }})
         root_size=$(expr $(df -h / | tail -1 | awk '{print $4}' | sed 's/[[:alpha:]]//g' | sed 's/\..*//') - ${{ inputs.root-reserve-gb }})
         sudo truncate -s "$mnt_size"G /mnt/mnt.img
         sudo truncate -s "$root_size"G /root.img
