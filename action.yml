@@ -3,6 +3,14 @@ description: 'Maximize the available disk space for OpenWrt build job'
 branding:
   icon: 'crop'
   color: 'orange'
+inputs:
+  swap-size-gb:
+    description: 'Swap space to create, in GB.'
+    required: false
+    default: '4'
+  build-mount-path:
+    description: 'Absolute path to the mount point where the build space will be available, defaults to github.workspace if unset.'
+    required: false
 runs:
   using: "composite"
   steps:
@@ -28,6 +36,21 @@ runs:
          /usr/local/share/{chromium,powershell,vcpkg} \
          /usr/share/dotnet \
          /usr/share/swift
+        sudo swapoff -a
+        sudo rm -f /swapfile
+        if [[ "${{ inputs.swap-size-gb }}" != 0 ]]; then
+          echo "::group::  Create SWAP"
+          sudo dd if=/dev/zero of="/mnt/swapfile" bs=1G count=${{ inputs.swap-size-gb }}
+          sudo chmod 600 /mnt/swapfile
+          sudo mkswap /mnt/swapfile
+          sudo swapon /mnt/swapfile
+          echo "::endgroup::"
+        fi
+        BUILD_MOUNT_PATH="${{ inputs.build-mount-path }}"
+        if [[ -n "$BUILD_MOUNT_PATH" ]]; then
+          sudo mkdir -p "$BUILD_MOUNT_PATH"
+          sudo chown -R runner:runner "$BUILD_MOUNT_PATH"
+        fi
         sudo sysctl -w vm.drop_caches=3
 
     - name: Disk space report after modification
