@@ -26,6 +26,10 @@ runs:
     - name: Free disk space
       shell: bash
       run: |
+        BUILD_MOUNT_PATH="${{ inputs.build-mount-path }}"
+        if [[ -n "$BUILD_MOUNT_PATH" ]]; then
+          sudo mkdir -p "$BUILD_MOUNT_PATH"
+        fi
         sudo find /opt -mindepth 1 -maxdepth 1 ! -name "*runner*" -exec rm -rf {} \;
         sudo rm -rf /usr/local/lib/android \
          /usr/lib/google-cloud-sdk \
@@ -46,11 +50,26 @@ runs:
           sudo swapon /mnt/swapfile
           echo "::endgroup::"
         fi
-        BUILD_MOUNT_PATH="${{ inputs.build-mount-path }}"
-        if [[ -n "$BUILD_MOUNT_PATH" ]]; then
+        root_dev=$(df / | awk 'NR==2 {print $1}')
+        mnt_dev=$(df /mnt | awk 'NR==2 {print $1}')
+        if [[ "$root_dev" != "$mnt_dev" ]]; then
+          echo "::group::  Create Volume Group"
+          mnt_size=$(expr $(df -h /mnt | tail -1 | awk '{print $4}' | sed 's/[[:alpha:]]//g' | sed 's/\..*//') - ${{ inputs.swap-size-gb }})
+          root_size=$(expr $(df -h / | tail -1 | awk '{print $4}' | sed 's/[[:alpha:]]//g' | sed 's/\..*//') - ${{ inputs.root-reserve-gb }})
+          sudo truncate -s "$mnt_size"G /mnt/mnt.img
+          sudo truncate -s "$root_size"G /root.img
+          sudo losetup /dev/loop6 /mnt/mnt.img
+          sudo losetup /dev/loop7 /root.img
+          sudo pvcreate /dev/loop6
+          sudo pvcreate /dev/loop7
+          sudo vgcreate github /dev/loop6 /dev/loop7
+          sudo lvcreate -n runner -l 100%FREE github
+          sudo mkfs.xfs /dev/mapper/github-runner
           sudo mkdir -p "$BUILD_MOUNT_PATH"
-          sudo chown -R runner:runner "$BUILD_MOUNT_PATH"
+          sudo mount /dev/mapper/github-runner "$BUILD_MOUNT_PATH"
+          echo "::endgroup::"
         fi
+        sudo chown -R runner:runner "$BUILD_MOUNT_PATH"
         sudo sysctl -w vm.drop_caches=3
 
     - name: Disk space report after modification
