@@ -27,9 +27,10 @@ runs:
       shell: bash
       run: |
         BUILD_MOUNT_PATH="${{ inputs.build-mount-path }}"
-        if [[ -n "$BUILD_MOUNT_PATH" ]]; then
-          sudo mkdir -p "$BUILD_MOUNT_PATH"
+        if [[ -z "$BUILD_MOUNT_PATH" ]]; then
+          BUILD_MOUNT_PATH="${{ github.workspace }}"
         fi
+        sudo mkdir -p "$BUILD_MOUNT_PATH"
         sudo find /opt -mindepth 1 -maxdepth 1 ! -name "*runner*" -exec rm -rf {} \;
         sudo rm -rf /usr/local/lib/android \
          /usr/lib/google-cloud-sdk \
@@ -65,7 +66,6 @@ runs:
           sudo vgcreate github /dev/loop6 /dev/loop7
           sudo lvcreate -n runner -l 100%FREE github
           sudo mkfs.xfs /dev/mapper/github-runner
-          sudo mkdir -p "$BUILD_MOUNT_PATH"
           sudo mount /dev/mapper/github-runner "$BUILD_MOUNT_PATH"
           echo "::endgroup::"
         fi
