@@ -4,6 +4,10 @@ branding:
   icon: 'crop'
   color: 'orange'
 inputs:
+  root-reserve-gb:
+    description: 'Space to be left free on the root filesystem, in GB.'
+    required: false
+    default: '2'
   swap-size-gb:
     description: 'Swap space to create, in GB.'
     required: false
@@ -20,7 +24,7 @@ runs:
         echo -e "\e[1;32mMemory:\e[0m"
         free -h
         echo -e "\e[1;32mStorage:\e[0m"
-        df -Th /
+        df -Th / /mnt
         echo
 
     - name: Free disk space
