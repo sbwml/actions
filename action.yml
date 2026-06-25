@@ -1,0 +1,13 @@
+runs:
+  using: "composite"
+  steps:
+    - name: Install LLVM
+      shell: bash
+      run: |
+        export PATH="/opt/clang/bin:$PATH"
+        echo "/opt/clang/bin" >> $GITHUB_PATH
+        sudo mkdir /opt/clang
+        wget -q https://github.com/sbwml/redhat-llvm-project/releases/download/22.0.2/clang-22.0.2-x86_64-redhat-linux-gnu.tar.xz
+        sudo tar --strip-components=1 -C /opt/clang -xf clang-22.0.2-x86_64-redhat-linux-gnu.tar.xz
+        rm -rf clang-22.0.2-x86_64-redhat-linux-gnu.tar.xz
+        clang --version
