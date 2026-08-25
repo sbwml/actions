@@ -10,60 +10,17 @@ runs:
         sudo bash -c "curl -skL https://raw.githubusercontent.com/sbwml/actions/openwrt-build-setup/sources-24.04.list > /etc/apt/sources.list"
         sudo apt-get update
         sudo apt-get install -y \
-          antlr3 \
-          asciidoc \
-          autoconf \
-          automake \
-          binutils \
-          bison \
-          build-essential \
-          bzip2 \
-          ccache \
-          cmake \
-          coreutils \
-          curl \
-          file \
-          flex \
-          g++ \
-          g++-multilib \
-          gawk \
-          gcc-multilib \
-          gettext \
-          git \
-          gnutls-dev \
-          gperf \
-          haveged \
-          jq \
-          lib32gcc-s1 \
-          libc6-dev-i386 \
-          libelf-dev \
-          libfuse-dev \
-          libglib2.0-dev \
-          libncurses5-dev \
-          libplist-utils \
-          libpython3-dev \
-          libreadline-dev \
-          libssl-dev \
-          libtool \
-          msmtp \
-          patch \
-          python3 \
-          python3-pip \
-          python3-ply \
-          python3-pyelftools \
-          qemu-utils \
-          rename \
-          rsync \
-          scons \
-          subversion \
-          swig \
-          texinfo \
-          uglifyjs \
-          unzip \
-          upx-ucl \
-          wget \
-          xmlto \
-          zlib1g-dev
+          antlr3 asciidoc autoconf automake binutils \
+          bison build-essential bzip2 ccache cmake \
+          coreutils curl file flex g++ \
+          g++-multilib gawk gcc-multilib gettext git \
+          gnutls-dev gperf haveged jq lib32gcc-s1 \
+          libc6-dev-i386 libelf-dev libfuse-dev libglib2.0-dev libncurses5-dev \
+          libplist-utils libpython3-dev libreadline-dev libssl-dev libtool \
+          msmtp patch python3 python3-pip python3-ply \
+          python3-pyelftools qemu-utils rename rsync scons \
+          subversion swig texinfo uglifyjs unzip \
+          upx-ucl wget xmlto zlib1g-dev
 
         # fix openwrt dockerd build
         sudo install -m 0755 -d /usr/share/keyrings
@@ -71,12 +28,8 @@ runs:
         echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
         sudo apt-get update
         sudo apt-get install -y \
-          containerd.io \
-          docker-buildx-plugin \
-          docker-ce \
-          docker-ce-cli \
-          docker-ce-rootless-extras \
-          docker-compose-plugin
+          containerd.io docker-buildx-plugin docker-ce \
+          docker-ce-cli docker-ce-rootless-extras docker-compose-plugin
         if [ -f /usr/libexec/docker/docker-init ]; then
           sudo ln -sf /usr/libexec/docker/docker-init /usr/local/bin/docker-init
         fi
